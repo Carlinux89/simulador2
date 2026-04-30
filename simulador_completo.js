@@ -40,3 +40,42 @@ function guardarTasa() {
   }
   mostrarTexto("mensajeTasa", "Tasa configurada correctamente: " + tasaInteres + "%.");
 }
+
+function guardarCliente() {
+  let cedula = recuperaraTexto("cedula");
+  let nombre = recuperaraTexto("nombre");
+  let apellido = recuperaraTexto("apellido");
+  let ingresos = recuperarFloat("ingresos");
+  let egresos = recuperarFloat("egresos");
+
+  let cliente = {
+    cedula: cedula,
+    nombre: nombre,
+    apellido: apellido,
+    ingresos: ingresos,
+    egresos: egresos
+  }
+  clientes.push(cliente);
+  pintarClientes();
+}
+
+function pintarClientes() {
+  let tBody = document.getElementById("tablaClientes");
+  let contenidoTabla = "";
+  let cliRecuperado;
+  for (let i = 0; i < clientes.length; i++) {
+    cliRecuperado = clientes[i];
+    contenidoTabla += "<tr>"
+      + "<td> " + cliRecuperado.cedula + "</td >"
+      + " <td>" + cliRecuperado.nombre + "</td>"
+      + " <td>" + cliRecuperado.apellido + "</td>"
+      + " <td>" + cliRecuperado.ingresos + "</td>"
+      + " <td>" + cliRecuperado.egresos + "</td>"
+      + " <td>"
+      + "<button>Actualizar</button>"
+      + "<button>Eliminar</button>"
+      + "</td>"
+      + "</tr > ";
+  }
+  tBody.innerHTML = contenidoTabla;
+}
