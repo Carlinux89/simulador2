@@ -55,7 +55,21 @@ function guardarCliente() {
     ingresos: ingresos,
     egresos: egresos
   }
-  clientes.push(cliente);
+  // 🔑 Si hay cliente seleccionado PERO la cédula cambió
+  if (clienteSeleccionado && clienteSeleccionado.cedula !== cedula) {
+    clienteSeleccionado = null; // salir del modo edición
+  }
+
+  if (clienteSeleccionado) {
+    //Actualizar cliente existente
+    //clienteSeleccionado.cedula = cedula;
+    clienteSeleccionado.nombre = nombre;
+    clienteSeleccionado.apellido = apellido;
+    clienteSeleccionado.ingresos = ingresos;
+    clienteSeleccionado.egresos = egresos;
+  } else {
+    clientes.push(cliente);
+  }
   pintarClientes();
 }
 
@@ -72,10 +86,41 @@ function pintarClientes() {
       + " <td>" + cliRecuperado.ingresos + "</td>"
       + " <td>" + cliRecuperado.egresos + "</td>"
       + " <td>"
-      + "<button>Actualizar</button>"
-      + "<button>Eliminar</button>"
+      + "<button onclick=\"seleccionarCliente('" + cliRecuperado.cedula + "')\">Actualizar</button>"
+      + "<button onclick=\"eliminarCliente('" + cliRecuperado.cedula + "')\">Eliminar</button>"
       + "</td>"
       + "</tr > ";
   }
   tBody.innerHTML = contenidoTabla;
 }
+
+function buscarCliente(cedula) {
+  for (let i = 0; i < clientes.length; i++) {
+    if (clientes[i].cedula === cedula) {
+      return clientes[i];
+    }
+  }
+  return null;
+}
+
+function seleccionarCliente(cedula) {
+  clienteSeleccionado = buscarCliente(cedula);
+  if (clienteSeleccionado) {
+    mostrarTextoEnCaja("cedula", clienteSeleccionado.cedula);
+    mostrarTextoEnCaja("nombre", clienteSeleccionado.nombre);
+    mostrarTextoEnCaja("apellido", clienteSeleccionado.apellido);
+    mostrarTextoEnCaja("ingresos", clienteSeleccionado.ingresos);
+    mostrarTextoEnCaja("egresos", clienteSeleccionado.egresos);
+  } else {
+    alert("Cliente no encontrado");
+  }
+}
+
+function limpiarFormulario() {
+  mostrarTextoEnCaja("cedula", "");
+  mostrarTextoEnCaja("nombre", "");
+  mostrarTextoEnCaja("apellido", "");
+  mostrarTextoEnCaja("ingresos", "");
+  mostrarTextoEnCaja("egresos", "");
+  clienteSeleccionado = null;
+} 
