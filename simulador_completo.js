@@ -48,29 +48,29 @@ function guardarCliente() {
   let ingresos = recuperarFloat("ingresos");
   let egresos = recuperarFloat("egresos");
 
-  let cliente = {
-    cedula: cedula,
-    nombre: nombre,
-    apellido: apellido,
-    ingresos: ingresos,
-    egresos: egresos
-  }
-  // 🔑 Si hay cliente seleccionado PERO la cédula cambió
-  if (clienteSeleccionado && clienteSeleccionado.cedula !== cedula) {
-    clienteSeleccionado = null; // salir del modo edición
-  }
+  let cliente = {}
+  cliente.cedula = cedula;
+  cliente.nombre = nombre;
+  cliente.apellido = apellido;
+  cliente.ingresos = ingresos;
+  cliente.egresos = egresos;
 
-  if (clienteSeleccionado) {
-    //Actualizar cliente existente
-    //clienteSeleccionado.cedula = cedula;
-    clienteSeleccionado.nombre = nombre;
-    clienteSeleccionado.apellido = apellido;
-    clienteSeleccionado.ingresos = ingresos;
-    clienteSeleccionado.egresos = egresos;
-  } else {
+  let clienteExistente = buscarCliente(cedula);
+  if (clienteExistente == null) {
+    // Agregar nuevo cliente
     clientes.push(cliente);
+    limpiarFormulario();
+    pintarClientes();
   }
-  pintarClientes();
+  else {
+    // Actualizar cliente existente
+    clienteExistente.nombre = nombre;
+    clienteExistente.apellido = apellido;
+    clienteExistente.ingresos = ingresos;
+    clienteExistente.egresos = egresos;
+    limpiarFormulario();
+    pintarClientes();
+  }
 }
 
 function pintarClientes() {
@@ -95,17 +95,22 @@ function pintarClientes() {
 }
 
 function buscarCliente(cedula) {
+  let elementoCliente;
+  let clienteEncontrado = null;
   for (let i = 0; i < clientes.length; i++) {
-    if (clientes[i].cedula === cedula) {
-      return clientes[i];
+    elementoCliente = clientes[i];
+    if (elementoCliente.cedula === cedula) {
+      clienteEncontrado = elementoCliente;
+      break;
     }
   }
-  return null;
+  return clienteEncontrado;
 }
 
 function seleccionarCliente(cedula) {
-  clienteSeleccionado = buscarCliente(cedula);
-  if (clienteSeleccionado) {
+  let resultado = buscarCliente(cedula);
+  if (resultado != null) {
+    clienteSeleccionado = resultado;
     mostrarTextoEnCaja("cedula", clienteSeleccionado.cedula);
     mostrarTextoEnCaja("nombre", clienteSeleccionado.nombre);
     mostrarTextoEnCaja("apellido", clienteSeleccionado.apellido);
@@ -122,5 +127,5 @@ function limpiarFormulario() {
   mostrarTextoEnCaja("apellido", "");
   mostrarTextoEnCaja("ingresos", "");
   mostrarTextoEnCaja("egresos", "");
-  clienteSeleccionado = null;
+  //clienteSeleccionado = null;
 } 
