@@ -14,8 +14,9 @@
   </header>
 
   <nav>
-    <button onclick="mostrarSeccion('parametros')">Parámetros</button>
-    <button onclick="mostrarSeccion('clientes')">Clientes</button>
+    <button class="crud" onclick="mostrarSeccion('parametros')">Parámetros</button>
+    <button class="crud" id="btnClientes" onclick="mostrarSeccion('clientes')">Clientes</button>
+    <button class="crud" onclick="mostrarSeccion('creditos')">Solicitar Crédito</button>
   </nav>
 
   <section id="parametros">
@@ -26,7 +27,7 @@
     <span>%</span>
 
     <br>
-    <button onclick="guardarTasa()">Guardar tasa</button>
+    <button class="crud" onclick="guardarTasa()">Guardar tasa</button>
 
     <p id="mensajeTasa"></p>
   </section>
@@ -42,8 +43,8 @@
 
     <br>
 
-    <button onclick="guardarCliente()">Guardar cliente</button>
-    <button onclick="limpiarFormulario()">Limpiar</button>
+    <button class="crud" onclick="guardarCliente()">Guardar cliente</button>
+    <button class="crud" onclick="limpiarFormulario()">Limpiar</button>
 
     <table>
       <thead>
@@ -94,7 +95,27 @@
     </table>
   </section>
 
+  <section id="creditos">
+    <h2>Solicitar Crédito</h2>
 
+    <input type="text" id="buscarCedulaCredito">
+    <button class="crud" onclick="buscarClienteCredito()">Buscar cliente</button>
+
+    <div id="datosClienteCredito" class="card"></div>
+
+    <input type="number" id="montoCredito" placeholder="Monto Crédito" disabled>
+    <input type="number" id="plazoCredito" placeholder="Plazo Crédito" disabled>
+
+    <br>
+
+    <button class="crud" id="btnCalcular" onclick="calcularCredito()" disabled>Calcular crédito</button>
+
+    <div id="resultadoCredito"></div>
+
+    <button class="crud" id="btnSolicitarCredito" onclick="solicitarCredito()" disabled>
+      Solicitar crédito
+    </button>
+  </section>
 
   <script src="simulador_completo.js"></script>
   <script src="utilitarios.js"></script>
