@@ -28,6 +28,10 @@ function ocultarSecciones() {
   let listaClass3 = seccionCreditos.classList;
   listaClass3.remove("activa");
 
+  let seccionHistorial = document.getElementById("listaCreditos");
+  let listaClass4 = seccionHistorial.classList;
+  listaClass4.remove("activa");
+
 }
 
 function mostrarSeccion(id) {
@@ -39,7 +43,7 @@ function mostrarSeccion(id) {
 
 function guardarTasa() {
   let btnClientes = document.getElementById("btnClientes");
-  btnClientes.enabled = false;
+  btnClientes.disabled = false;
 
   tasaInteres = recuperarFloat("tasaInteres");
   if (isNaN(tasaInteres) || tasaInteres < 10 || tasaInteres > 20) {
@@ -47,8 +51,8 @@ function guardarTasa() {
     return;
   }
   mostrarTexto("mensajeTasa", "Tasa configurada correctamente: " + tasaInteres + "%.");
-}
 
+}
 
 function guardarCliente() {
 
@@ -169,6 +173,20 @@ function limpiarFormulario() {
   //clienteSeleccionado = null;
 }
 
+function limpiarFormularioCredito() {
+  mostrarTextoEnCaja("buscarCedulaCredito", "");
+  document.getElementById("datosClienteCredito").textContent = "";
+  mostrarTextoEnCaja("montoCredito", "");
+  mostrarTextoEnCaja("plazoCredito", "");
+  document.getElementById("resultadoCredito").textContent = "";
+  //deshabilitar campos de monto y plazo para calcular crédito
+  document.getElementById("montoCredito").disabled = true;
+  document.getElementById("plazoCredito").disabled = true;
+  document.getElementById("btnCalcular").disabled = true;
+  document.getElementById("btnSolicitarCredito").disabled = true;
+
+}
+
 function buscarClienteCredito() {
   let cedula = recuperaraTexto("buscarCedulaCredito".trim());
   let resultado = buscarCliente(cedula);
@@ -189,6 +207,10 @@ function buscarClienteCredito() {
     document.getElementById("btnCalcular").disabled = false;
   } else {
     datosClienteCredito.innerHTML = "<p><strong>Cliente no encontrado</strong></p>";
+    //deshabilitar campos de monto y plazo para calcular crédito
+    document.getElementById("montoCredito").disabled = true;
+    document.getElementById("plazoCredito").disabled = true;
+    document.getElementById("btnCalcular").disabled = true;
   }
 }
 
@@ -237,8 +259,8 @@ function calcularCredito() {
   let totalAPagar = calcularTotalPagar(montoCalculado, interes);
   cuotaCalculada = calcularCuotaMensual(totalAPagar, plazoCalculado);
 
-  let estadoCredito = aprobarCredito(capacidadPago, cuotaCalculada);
-  if (estadoCredito === "CREDITO APROBADO") {
+  creditoAprobado = aprobarCredito(capacidadPago, cuotaCalculada);
+  if (creditoAprobado === "CREDITO APROBADO") {
     estadoCredito = "APROBADO";
     document.getElementById("resultadoCredito").className = "aprobado";
     let btnAsignar = document.getElementById("btnSolicitarCredito");
@@ -254,4 +276,105 @@ function calcularCredito() {
     + "Total a pagar: $" + totalAPagar.toFixed(2) + "<br>"
     + "RESULTADO: " + estadoCredito;
 
+}
+
+function asignarCredito() {
+  let credito = {
+    cedula: clienteSeleccionado.cedula,
+    nombre: clienteSeleccionado.nombre,
+    apellido: clienteSeleccionado.apellido,
+    monto: montoCalculado,
+    tasa: tasaInteres,
+    plazo: plazoCalculado,
+    cuota: cuotaCalculada,
+  };
+
+  creditos.push(credito); // se agrega un nuevo objeto al arreglo de créditos
+  alert("Crédito registrado exitosamente");
+  mostrarSeccion("listaCreditos");
+  pintarCreditos(creditos);
+  limpiarFormularioCredito();
+}
+
+function buscarCreditos(cedula) {
+  let creditosCliente = [];
+  let creditoRecuperado;
+  for (let i = 0; i < creditos.length; i++) {
+    creditoRecuperado = creditos[i];
+    if (creditoRecuperado.cedula === cedula) {
+      creditosCliente.push(creditoRecuperado);
+    }
+  }
+  return creditosCliente;
+}
+
+function pintarCreditos(creditos) {
+  let tBody = document.getElementById("tablaCreditos");
+  let contenidoTabla = "";
+  let creditoRecuperado;
+  for (let i = 0; i < creditos.length; i++) {
+    creditoRecuperado = creditos[i];
+    contenidoTabla += "<tr>"
+      + "<td>" + creditoRecuperado.cedula + "</td>"
+      + "<td>" + creditoRecuperado.nombre + "</td>"
+      + "<td>" + creditoRecuperado.apellido + "</td>"
+      + "<td>" + creditoRecuperado.monto + "</td>"
+      + "<td>" + creditoRecuperado.tasa + "</td>"
+      + "<td>" + creditoRecuperado.plazo + "</td>"
+      + "<td>" + creditoRecuperado.cuota.toFixed(2) + "</td>"
+      + "<td>"
+      + "<button onclick=\"eliminarCredito('" + creditoRecuperado.cedula + "')\">Eliminar</button>"
+      + "</td>"
+      + "</tr>";
+  }
+  tBody.innerHTML = contenidoTabla;
+}
+
+function eliminarCredito(cedula) {
+  let indiceEliminar = -1;
+  for (let i = 0; i < creditos.length; i++) {
+    if (creditos[i].cedula === cedula) {
+      indiceEliminar = i;
+      break;
+    }
+  }
+  if (indiceEliminar !== -1) {
+    creditos.splice(indiceEliminar, 1);
+    pintarCreditos();
+  }
+}
+
+function eliminarCliente(cedula) {
+  let indiceEliminar = -1;
+  for (let i = 0; i < clientes.length; i++) {
+    if (clientes[i].cedula === cedula) {
+      indiceEliminar = i;
+      break;
+    }
+  }
+  if (indiceEliminar !== -1) {
+    clientes.splice(indiceEliminar, 1);
+    pintarClientes();
+  }
+}
+
+function buscarCreditosCliente() {
+
+  let cedula = recuperaraTexto("buscarCedulaListado").trim();
+
+  if (cedula === "") {
+    alert("Campo obligatorio");
+    return;
+  }
+  if (!/^\d+$/.test(cedula)) {
+    alert("La cédula solo debe contener número");
+    return;
+  }
+  if (cedula.length != 10) {
+    alert("La cédula debe contener 10 dígitos");
+    return;
+  }
+
+  let creditosCliente = buscarCreditos(cedula);
+  pintarCreditos(creditosCliente);
 }
