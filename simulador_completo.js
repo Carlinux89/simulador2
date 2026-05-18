@@ -32,6 +32,10 @@ function ocultarSecciones() {
   let listaClass4 = seccionHistorial.classList;
   listaClass4.remove("activa");
 
+  let seccionContacto = document.getElementById("listaContactos");
+  let listaClass5 = seccionContacto.classList;
+  listaClass5.remove("activa");
+
 }
 
 function mostrarSeccion(id) {
@@ -91,6 +95,7 @@ function guardarCliente() {
   let apellido = recuperaraTexto("apellido");
   let ingresos = recuperarFloat("ingresos");
   let egresos = recuperarFloat("egresos");
+  let email = recuperaraTexto("email");
 
   let cliente = {}
   cliente.cedula = cedula;
@@ -98,6 +103,7 @@ function guardarCliente() {
   cliente.apellido = apellido;
   cliente.ingresos = ingresos;
   cliente.egresos = egresos;
+  cliente.email = email;
 
   let clienteExistente = buscarCliente(cedula);
   if (clienteExistente == null) {
@@ -111,6 +117,7 @@ function guardarCliente() {
     clienteExistente.apellido = apellido;
     clienteExistente.ingresos = ingresos;
     clienteExistente.egresos = egresos;
+    clienteExistente.email = email;
     limpiarFormulario();
     pintarClientes();
   }
@@ -138,6 +145,7 @@ function seleccionarCliente(cedula) {
     mostrarTextoEnCaja("apellido", clienteSeleccionado.apellido);
     mostrarTextoEnCaja("ingresos", clienteSeleccionado.ingresos);
     mostrarTextoEnCaja("egresos", clienteSeleccionado.egresos);
+    mostrarTextoEnCaja("email", clienteSeleccionado.email);
   } else {
     alert("Cliente no encontrado");
   }
@@ -155,6 +163,7 @@ function pintarClientes() {
       + " <td>" + cliRecuperado.apellido + "</td>"
       + " <td>" + cliRecuperado.ingresos + "</td>"
       + " <td>" + cliRecuperado.egresos + "</td>"
+      + " <td>" + cliRecuperado.email + "</td>"
       + " <td>"
       + "<button onclick=\"seleccionarCliente('" + cliRecuperado.cedula + "')\">Actualizar</button>"
       + "<button onclick=\"eliminarCliente('" + cliRecuperado.cedula + "')\">Eliminar</button>"
@@ -170,6 +179,7 @@ function limpiarFormulario() {
   mostrarTextoEnCaja("apellido", "");
   mostrarTextoEnCaja("ingresos", "");
   mostrarTextoEnCaja("egresos", "");
+  mostrarTextoEnCaja("email", "");
   //clienteSeleccionado = null;
 }
 
@@ -200,6 +210,7 @@ function buscarClienteCredito() {
       + "<p><strong>Apellido: </strong>" + resultado.apellido + "</p>"
       + "<p><strong>Ingresos: </strong>$" + resultado.ingresos.toFixed(2) + "</p>"
       + "<p><strong>Egresos: </strong>$" + resultado.egresos.toFixed(2) + "</p>"
+      + "<p><strong>Email: </strong>" + resultado.email + "</p>"
       ;
     //Habilitar campos de monto y plazo para calcular crédito
     document.getElementById("montoCredito").disabled = false;

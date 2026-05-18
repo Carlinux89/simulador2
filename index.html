@@ -18,6 +18,7 @@
     <button class="crud" id="btnClientes" onclick="mostrarSeccion('clientes')">Clientes</button>
     <button class="crud" onclick="mostrarSeccion('creditos')">Solicitar Crédito</button>
     <button class="crud" onclick="mostrarSeccion('listaCreditos')">Créditos Registrados</button>
+    <button class="crud" onclick="mostrarSeccion('listaContactos')">Contacto</button>
   </nav>
 
   <section id="parametros">
@@ -41,6 +42,7 @@
     <input type="text" id="apellido" placeholder="Apellido">
     <input type="number" id="ingresos" placeholder="Ingresos">
     <input type="number" id="egresos" placeholder="Egresos">
+    <input type="text" id="email" placeholder="Email">
 
     <br>
 
@@ -55,6 +57,7 @@
           <th>Apellido</th>
           <th>Ingresos</th>
           <th>Egresos</th>
+          <th>Email</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -171,6 +174,10 @@
         </tr>
       </tbody>
     </table>
+  </section>
+
+  <section id="listaContactos">
+    <h2>Desarrollado por Carlos Alfredo Chavez</h2>
   </section>
 
   <script src="simulador_completo.js"></script>
