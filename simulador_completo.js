@@ -3,6 +3,7 @@ let clientes = [];
 let creditos = [];
 
 let tasaInteres = 15;
+let montoMaximo = 0;
 let clienteSeleccionado = null;
 let cuotaCalculada = 0;
 let montoCalculado = 0;
@@ -32,9 +33,13 @@ function ocultarSecciones() {
   let listaClass4 = seccionHistorial.classList;
   listaClass4.remove("activa");
 
-  let seccionContacto = document.getElementById("listaContactos");
-  let listaClass5 = seccionContacto.classList;
+  let seccionVip = document.getElementById("creditosVIP");
+  let listaClass5 = seccionVip.classList;
   listaClass5.remove("activa");
+
+  let seccionAcerca = document.getElementById("acercaDe");
+  let listaClass6 = seccionAcerca.classList;
+  listaClass6.remove("activa");
 
 }
 
@@ -46,8 +51,6 @@ function mostrarSeccion(id) {
 }
 
 function guardarTasa() {
-  let btnClientes = document.getElementById("btnClientes");
-  btnClientes.disabled = false;
 
   tasaInteres = recuperarFloat("tasaInteres");
   if (isNaN(tasaInteres) || tasaInteres < 10 || tasaInteres > 20) {
@@ -56,6 +59,13 @@ function guardarTasa() {
   }
   mostrarTexto("mensajeTasa", "Tasa configurada correctamente: " + tasaInteres + "%.");
 
+  //monto maximo
+  montoMaximo = recuperarInt("montoMaximo").toFixed(2);
+  if (isNaN(montoMaximo) || montoMaximo < 100 || montoMaximo > 10000) {
+    mostrarTexto("mensajeMonto", "Tasa debe estar entre $100 y $10000.");
+    return;
+  }
+  mostrarTexto("mensajeMonto", "Monto configurado correctamente: " + "$" + montoMaximo);
 }
 
 function guardarCliente() {
@@ -93,17 +103,19 @@ function guardarCliente() {
   let cedula = recuperaraTexto("cedula");
   let nombre = recuperaraTexto("nombre");
   let apellido = recuperaraTexto("apellido");
+  let telefono = recuperaraTexto("telefono");
+  let email = recuperaraTexto("email");
   let ingresos = recuperarFloat("ingresos");
   let egresos = recuperarFloat("egresos");
-  let email = recuperaraTexto("email");
 
   let cliente = {}
   cliente.cedula = cedula;
   cliente.nombre = nombre;
   cliente.apellido = apellido;
+  cliente.telefono = telefono;
+  cliente.email = email;
   cliente.ingresos = ingresos;
   cliente.egresos = egresos;
-  cliente.email = email;
 
   let clienteExistente = buscarCliente(cedula);
   if (clienteExistente == null) {
@@ -115,9 +127,10 @@ function guardarCliente() {
     // Actualizar cliente existente
     clienteExistente.nombre = nombre;
     clienteExistente.apellido = apellido;
+    clienteExistente.telefono = telefono;
+    clienteExistente.email = email;
     clienteExistente.ingresos = ingresos;
     clienteExistente.egresos = egresos;
-    clienteExistente.email = email;
     limpiarFormulario();
     pintarClientes();
   }
@@ -143,9 +156,10 @@ function seleccionarCliente(cedula) {
     mostrarTextoEnCaja("cedula", clienteSeleccionado.cedula);
     mostrarTextoEnCaja("nombre", clienteSeleccionado.nombre);
     mostrarTextoEnCaja("apellido", clienteSeleccionado.apellido);
+    mostrarTextoEnCaja("telefono", clienteSeleccionado.telefono);
+    mostrarTextoEnCaja("email", clienteSeleccionado.email);
     mostrarTextoEnCaja("ingresos", clienteSeleccionado.ingresos);
     mostrarTextoEnCaja("egresos", clienteSeleccionado.egresos);
-    mostrarTextoEnCaja("email", clienteSeleccionado.email);
   } else {
     alert("Cliente no encontrado");
   }
@@ -161,9 +175,10 @@ function pintarClientes() {
       + "<td> " + cliRecuperado.cedula + "</td >"
       + " <td>" + cliRecuperado.nombre + "</td>"
       + " <td>" + cliRecuperado.apellido + "</td>"
+      + " <td>" + cliRecuperado.telefono + "</td>"
+      + " <td>" + cliRecuperado.email + "</td>"
       + " <td>" + cliRecuperado.ingresos + "</td>"
       + " <td>" + cliRecuperado.egresos + "</td>"
-      + " <td>" + cliRecuperado.email + "</td>"
       + " <td>"
       + "<button onclick=\"seleccionarCliente('" + cliRecuperado.cedula + "')\">Actualizar</button>"
       + "<button onclick=\"eliminarCliente('" + cliRecuperado.cedula + "')\">Eliminar</button>"
@@ -177,9 +192,10 @@ function limpiarFormulario() {
   mostrarTextoEnCaja("cedula", "");
   mostrarTextoEnCaja("nombre", "");
   mostrarTextoEnCaja("apellido", "");
+  mostrarTextoEnCaja("telefono", "");
+  mostrarTextoEnCaja("email", "");
   mostrarTextoEnCaja("ingresos", "");
   mostrarTextoEnCaja("egresos", "");
-  mostrarTextoEnCaja("email", "");
   //clienteSeleccionado = null;
 }
 
@@ -208,9 +224,10 @@ function buscarClienteCredito() {
       + "<p><strong>Cédula: </strong>" + resultado.cedula + "</p>"
       + "<p><strong>Nombre: </strong>" + resultado.nombre + "</p>"
       + "<p><strong>Apellido: </strong>" + resultado.apellido + "</p>"
+      + "<p><strong>Télefono: </strong>" + resultado.telefono + "</p>"
+      + "<p><strong>Email: </strong>" + resultado.email + "</p>"
       + "<p><strong>Ingresos: </strong>$" + resultado.ingresos.toFixed(2) + "</p>"
       + "<p><strong>Egresos: </strong>$" + resultado.egresos.toFixed(2) + "</p>"
-      + "<p><strong>Email: </strong>" + resultado.email + "</p>"
       ;
     //Habilitar campos de monto y plazo para calcular crédito
     document.getElementById("montoCredito").disabled = false;
@@ -238,11 +255,19 @@ function calcularCredito() {
     return;
   }
 
-  //validar monto sea entre 100 y 100000
-  if (recuperarFloat("montoCredito") < 100 || recuperarFloat("montoCredito") > 100000) {
-    alert("El monto debe ser entre $1,000 y $100,000");
+  //validar monto sea entre 100 y 10000
+  // if (recuperarFloat("montoCredito") < 100 || recuperarFloat("montoCredito") > 10000) {
+  //   alert("El monto debe ser entre $1,000 y $10000");
+  //   return;
+  // }
+
+  let monto = recuperarFloat("montoCredito");
+  if (monto > montoMaximo) {
+    alert("El monto supera el máximo permitido: $" + montoMaximo);
+    mostrarTextoEnCaja("montoCredito", ""); // limpiar input
     return;
   }
+
   //validar plazo no puede estar vacio
   if (recuperaraTexto("plazoCredito").trim() === "") {
     alert("El plazo del crédito es obligatorio");
@@ -305,6 +330,10 @@ function asignarCredito() {
   mostrarSeccion("listaCreditos");
   pintarCreditos(creditos);
   limpiarFormularioCredito();
+  if (montoCalculado > 5000) {
+    mostrarSeccion("creditosVIP");
+    pintarCreditosVIP(creditos)
+  }
 }
 
 function buscarCreditos(cedula) {
@@ -388,4 +417,48 @@ function buscarCreditosCliente() {
 
   let creditosCliente = buscarCreditos(cedula);
   pintarCreditos(creditosCliente);
+}
+
+//examen
+function pintarCreditosVip(creditos) {
+  let tBody = document.getElementById("tablaCreditos");
+  let contenidoTabla = "";
+  let creditoRecuperado;
+  for (let i = 0; i < creditos.length; i++) {
+    creditoRecuperado = creditos[i];
+    contenidoTabla += "<tr>"
+      + "<td>" + creditoRecuperado.cedula + "</td>"
+      + "<td>" + creditoRecuperado.nombre + "</td>"
+      + "<td>" + creditoRecuperado.apellido + "</td>"
+      + "<td>" + creditoRecuperado.monto + "</td>"
+      + "<td>" + creditoRecuperado.tasa + "</td>"
+      + "<td>" + creditoRecuperado.plazo + "</td>"
+      + "<td>" + creditoRecuperado.cuota.toFixed(2) + "</td>"
+      + "<td>"
+      + "<button onclick=\"eliminarCredito('" + creditoRecuperado.cedula + "')\">Eliminar</button>"
+      + "</td>"
+      + "</tr>";
+  }
+  tBody.innerHTML = contenidoTabla;
+}
+
+function pintarCreditosVIP(creditos) {
+  let tBody = document.getElementById("tablaCreditosVIP");
+  let contenidoTabla = "";
+  for (let i = 0; i < creditos.length; i++) {
+    let creditoRecuperado = creditos[i];
+    if (creditoRecuperado.monto > 5000) {
+      contenidoTabla += "<tr>"
+        + "<td>" + creditoRecuperado.cedula + "</td>"
+        + "<td>" + creditoRecuperado.nombre + "</td>"
+        + "<td>" + creditoRecuperado.apellido + "</td>"
+        + "<td>" + creditoRecuperado.monto + "</td>"
+        + "<td>" + creditoRecuperado.tasa + "</td>"
+        + "<td>" + creditoRecuperado.plazo + "</td>"
+        + "<td>" + creditoRecuperado.cuota.toFixed(2) + "</td>"
+        + "</tr>";
+    }
+  }
+
+  tBody.innerHTML = contenidoTabla;
 }

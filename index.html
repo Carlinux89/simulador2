@@ -18,7 +18,8 @@
     <button class="crud" id="btnClientes" onclick="mostrarSeccion('clientes')">Clientes</button>
     <button class="crud" onclick="mostrarSeccion('creditos')">Solicitar Crédito</button>
     <button class="crud" onclick="mostrarSeccion('listaCreditos')">Créditos Registrados</button>
-    <button class="crud" onclick="mostrarSeccion('listaContactos')">Contacto</button>
+    <button class="crud" onclick="mostrarSeccion('creditosVIP');pintarCreditosVIP(creditos)">Créditos VIP</button>
+    <button class="crud" onclick="mostrarSeccion('acercaDe')">Acerca de.</button>
   </nav>
 
   <section id="parametros">
@@ -27,11 +28,16 @@
     <label>Tasa de interés:</label>
     <input type="number" id="tasaInteres" min="10" max="20" value="15">
     <span>%</span>
+    <br>
+    <label>Monto Máximo:</label>
+    <input type="number" id="montoMaximo">
+    <span>$</span>
 
     <br>
-    <button class="crud" onclick="guardarTasa()">Guardar tasa</button>
+    <button class="crud" onclick="guardarTasa()">Guardar</button>
 
     <p id="mensajeTasa"></p>
+    <p id="mensajeMonto"></p>
   </section>
 
   <section id="clientes">
@@ -40,9 +46,10 @@
     <input type="text" id="cedula" placeholder="Cédula">
     <input type="text" id="nombre" placeholder="Nombre">
     <input type="text" id="apellido" placeholder="Apellido">
+    <input type="text" id="telefono" placeholder="Télefono">
+    <input type="text" id="email" placeholder="Email">
     <input type="number" id="ingresos" placeholder="Ingresos">
     <input type="number" id="egresos" placeholder="Egresos">
-    <input type="text" id="email" placeholder="Email">
 
     <br>
 
@@ -55,9 +62,10 @@
           <th>Cédula</th>
           <th>Nombre</th>
           <th>Apellido</th>
+          <th>Télefono</th>
+          <th>Email</th>
           <th>Ingresos</th>
           <th>Egresos</th>
-          <th>Email</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -176,10 +184,36 @@
     </table>
   </section>
 
-  <section id="listaContactos">
-    <h2>Desarrollado por Carlos Alfredo Chavez</h2>
+  <section id="creditosVIP">
+    <table>
+      <thead>
+        <tr>
+          <th>Cédula</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Monto</th>
+          <th>Tasa</th>
+          <th>Plazo</th>
+          <th>Cuota</th>
+        </tr>
+      </thead>
+      <tbody id="tablaCreditosVIP">
+
+      </tbody>
+    </table>
   </section>
 
+  <section id="acercaDe">
+    <h2>Acerda de.</h2>
+    <p>Carlos Chavez</p>
+    <p>Desarrollo de Software</p>
+    <p>Facebook: Carlitos Chavez</p>
+    <p>TikTok: 593Alfred</p>
+    <p>Dios es bueno todo el tiempo, y todo el tiempo Dios es bueno.</p>
+    <p>Padre responsable que trabaja por el bienestar de la familia, estudiante que necesita obetener un titulo para
+      obetener mejores reditos economicos.</p>
+
+  </section>
   <script src="simulador_completo.js"></script>
   <script src="utilitarios.js"></script>
 </body>
