@@ -10,7 +10,9 @@ let montoCalculado = 0;
 let plazoCalculado = 0;
 let creditoAprobado = false;
 
-
+function saludar(){
+  alert("Bienvenido al sitema de creditos");
+}
 //Para recuperar o mostrar información usar los métodos de la clase utilitarios, puede agregar métodos adicionales en utilitarios
 
 function ocultarSecciones() {
