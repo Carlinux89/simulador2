@@ -43,6 +43,10 @@ function ocultarSecciones() {
   let listaClass6 = seccionAcerca.classList;
   listaClass6.remove("activa");
 
+  let seccionContacto = document.getElementById("contacto");
+  let listaClass7 = seccionContacto.classList;
+  listaClass7.remove("activa");
+
 }
 
 function mostrarSeccion(id) {
@@ -107,6 +111,7 @@ function guardarCliente() {
   let apellido = recuperaraTexto("apellido");
   let telefono = recuperaraTexto("telefono");
   let email = recuperaraTexto("email");
+  let direccion = recuperaraTexto("direccion");
   let ingresos = recuperarFloat("ingresos");
   let egresos = recuperarFloat("egresos");
 
@@ -116,6 +121,7 @@ function guardarCliente() {
   cliente.apellido = apellido;
   cliente.telefono = telefono;
   cliente.email = email;
+  cliente.direccion = direccion;
   cliente.ingresos = ingresos;
   cliente.egresos = egresos;
 
@@ -131,6 +137,7 @@ function guardarCliente() {
     clienteExistente.apellido = apellido;
     clienteExistente.telefono = telefono;
     clienteExistente.email = email;
+    clienteExistente.direccion = direccion;
     clienteExistente.ingresos = ingresos;
     clienteExistente.egresos = egresos;
     limpiarFormulario();
@@ -160,6 +167,7 @@ function seleccionarCliente(cedula) {
     mostrarTextoEnCaja("apellido", clienteSeleccionado.apellido);
     mostrarTextoEnCaja("telefono", clienteSeleccionado.telefono);
     mostrarTextoEnCaja("email", clienteSeleccionado.email);
+    mostrarTextoEnCaja("direccion", clienteSeleccionado.direccion);
     mostrarTextoEnCaja("ingresos", clienteSeleccionado.ingresos);
     mostrarTextoEnCaja("egresos", clienteSeleccionado.egresos);
   } else {
@@ -179,6 +187,7 @@ function pintarClientes() {
       + " <td>" + cliRecuperado.apellido + "</td>"
       + " <td>" + cliRecuperado.telefono + "</td>"
       + " <td>" + cliRecuperado.email + "</td>"
+      + " <td>" + cliRecuperado.direccion + "</td>"
       + " <td>" + cliRecuperado.ingresos + "</td>"
       + " <td>" + cliRecuperado.egresos + "</td>"
       + " <td>"
@@ -196,6 +205,7 @@ function limpiarFormulario() {
   mostrarTextoEnCaja("apellido", "");
   mostrarTextoEnCaja("telefono", "");
   mostrarTextoEnCaja("email", "");
+  mostrarTextoEnCaja("direccion", "");
   mostrarTextoEnCaja("ingresos", "");
   mostrarTextoEnCaja("egresos", "");
   //clienteSeleccionado = null;
@@ -228,6 +238,7 @@ function buscarClienteCredito() {
       + "<p><strong>Apellido: </strong>" + resultado.apellido + "</p>"
       + "<p><strong>Télefono: </strong>" + resultado.telefono + "</p>"
       + "<p><strong>Email: </strong>" + resultado.email + "</p>"
+      + "<p><strong>Direccion: </strong>" + resultado.direccion + "</p>"
       + "<p><strong>Ingresos: </strong>$" + resultado.ingresos.toFixed(2) + "</p>"
       + "<p><strong>Egresos: </strong>$" + resultado.egresos.toFixed(2) + "</p>"
       ;
